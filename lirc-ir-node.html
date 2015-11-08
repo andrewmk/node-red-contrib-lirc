@@ -3,64 +3,14 @@
         category: "input",
         icon: "feed.png",
         color: "#FFAAAA",
-        outputs: 2,
+        outputs: 1,
         defaults: {
-            name:    { value: "" },
+            name: {value: ""},
             debug: {value: false, required: true },
-            keymap: {value: {}, required: true }
         }, 
         label: function() {
             return this.name || "LircIrReceiver"
         },
-        oneditprepare: function() {
-            var $container = $("#node-input-keymap-container");
-            function generateKeymap(i, keymap) {
-                var container = $('<li/>',{style:"background: #fff; margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
-                var row = $('<div/>').appendTo(container);
-                var row2 = $('<div/>',{style:"padding-top: 5px; text-align: right;"}).appendTo(container);
-                var nameField = $('<input/>',{class:"node-input-name-value",type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row);
-                $('<span>&#8594;</span>').appendTo(row);
-                var keyField = $('<input/>',{class:"node-input-key-value",type:"text",style:"margin-left: 5px; width: 50px;"}).appendTo(row);
-                
-                if (keymap != undefined) {
-                  nameField.val(keymap.v);
-                  keyField.val(keymap.v2);
-                }
-                var finallSpan = $("<span/>", {style: "float:right;margin-right: 10px;"}).appendTo(row);
-                var deleteButton = $('<a/>',{href:"#",class:"editor-button editor-button-small", style:"margin-top: 7px; margin-left: 5px;"}).appendTo(finallSpan);
-                $('<i/>',{class:"fa fa-remove"}).appendTo(deleteButton);
-
-                deleteButton.click(function() {
-                    container.css({"background":"#fee"});
-                    container.fadeOut(300, function() {
-                        $(this).remove();
-                        $container.children().each(function(i) {
-                            $(this).find(".node-input-keymap-index").html(i+1);
-                        });
-                    });
-                });
-                $container.append(container);
-            }
-            $("#node-input-add-keymap").click(function() {
-                generateKeymap($container.children().length+1,{v:"",v2:""});
-                $("#node-input-keymap-container-div").scrollTop($("#node-input-keymap-container-div").get(0).scrollHeight);
-            });
-            console.log(this.keymap);
-            $.each(this.keymap, function(i) {
-                var key = this.keymap[i];
-                generateKeymap(i+1, {v: i, v2: key});
-            });
-
-        },
-        oneditsave: function() {
-             var keymap = $("#node-input-keymap-container").children();
-             var node = this;
-             keymap.each(function(i) {
-                node.keymap[keymap.find(".node-input-key-value").val()] = 
-                    keymap.find(".node-input-name-value").val();
-             });
-            console.log(this.keymap);
-        }
     });
 </script>
 
@@ -73,19 +23,10 @@
         <label for="node-input-debug"><i class="icon-info-circle"></i> Debug mode</label>
         <input type="checkbox" id="node-input-debug" placeholder="Debug">
     </div>
-    <div class="form-row node-input-keymap-container-row" style="margin-bottom: 0px;">
-        <div id="node-input-keymap-container-div" style="box-sizing: border-box; border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
-            <ol id="node-input-keymap-container" style="list-style-type:none; margin: 0;"></ol>
-        </div>
-    </div>
-    <div class="form-row">
-        <a href="#" class="editor-button editor-button-small" id="node-input-add-keymap" style="margin-top: 4px;"><i class="fa fa-plus"></i>Add key</a>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="lirc-ir in">
    <p>Node to use lirc IR receiver daemon</p>
    <p>Outputs an object called <b>msg</b> containing
-   <b>msg.payload</b>. msg.payload is a key code or mapped value if exists in configuration.</p>
-   <p>First output send key down message, sccond key up.</p>
+   <b>msg.payload</b>. msg.payload is an object containing key, code, repeat and remote.</p>
 </script>

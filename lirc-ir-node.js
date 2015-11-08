@@ -3,31 +3,23 @@ module.exports = function(RED) {
     function LircIrInNode(config) {
         RED.nodes.createNode(this,config);
         this.debug = config.debug || false;
-        this.keyMap = config.keymap || {};
         var node = this;
-        this.on('close', function() {
+        node.on('close', function() {
             if (ir !== undefined && listenerId !== undefined) {
                 ir.removeListener(listenerId);
             }
         });
         ir.init();
 	var lastKey = null;
-        var mappKey = function(key) {
-            var mappedKey = node.keyMap[key];
-            if (mappedKey == undefined) {
-                mappedKey = key;
-            }
-            return mappedKey;
-        }
 	var listenerId = ir.addListener(function(data) {
-            var mappedKey = mappKey(data.key);
-            var myPayload = {code: data.code, repeat: data.repeat, key: mappedKey, remote: data.remote};
+            var myPayload = {code: data.code, repeat: data.repeat, key: data.key, remote: data.remote};
             var msg = {payload: myPayload};
             if (node.debug) {   
-                node.status({fill:"green",shape:"ring",text:"Key: " + mappedKey});
+                node.status({fill:"green",shape:"ring",text:"Key: " + data.key});
+                setTimeout(function() { node.status({}); }, 2000);
             }
             node.send(msg);
-	}, 250);
+	}, 450);
     }
     RED.nodes.registerType("lirc-ir in", LircIrInNode);
 }
