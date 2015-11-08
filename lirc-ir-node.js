@@ -4,9 +4,13 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         this.debug = config.debug || false;
         var node = this;
+        var statusTimeout;
         node.on('close', function() {
             if (ir !== undefined && listenerId !== undefined) {
                 ir.removeListener(listenerId);
+            }
+            if (statusTimeout !== undefined) {
+                clearTimeout(statusTimeout);
             }
         });
         ir.init();
@@ -16,7 +20,10 @@ module.exports = function(RED) {
             var msg = {payload: myPayload};
             if (node.debug) {   
                 node.status({fill:"green",shape:"ring",text:"Key: " + data.key});
-                setTimeout(function() { node.status({}); }, 2000);
+                if (statusTimeout !== undefined) {
+                    clearTimeout(statusTimeout);
+                }
+                statusTimeout = setTimeout(function() { node.status({}); }, 2000);
             }
             node.send(msg);
 	}, 450);
