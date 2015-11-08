@@ -1,7 +1,6 @@
 module.exports = function(RED) {
-    var IR = require('lirc_node');
+    var ir = require('lirc_node');
     function LircIrInNode(config) {
-        var ir = new IR();
         RED.nodes.createNode(this,config);
         this.debug = config.debug || false;
         this.keyMap = config.keymap || {};
@@ -11,7 +10,7 @@ module.exports = function(RED) {
                 ir.stop();
             }
         });
-        ir.start();
+        ir.init();
 	var lastKey = null;
         var mappKey = function(key) {
             var mappedKey = node.keyMap[key];
@@ -20,22 +19,15 @@ module.exports = function(RED) {
             }
             return mappedKey;
         }
-	ir.on('down', function(key) {
-            var mappedKey = mappKey(key);
-            var msg = { payload: mappedKey };
+	ir.addListener(function(data) {
+            var mappedKey = mappKey(data.key);
+            var myPayload = {code: data.code, repeat: data.repeat, key: mappedKey, remote: data.remote};
+            var msg = {payload: myPayload};
             if (node.debug) {   
                 node.status({fill:"green",shape:"ring",text:"Key: " + mappedKey});
             }
-            node.send([msg, null]);
-	});
-        ir.on('up', function(key) {
-            var mappedKey = mappKey(key);
-            var msg = { payload: mappedKey };
-            node.send([null, msg]);
-            if (node.debug) {
-                node.status({fill:"red",shape:"ring",text:"Key: " + mappedKey});
-            }
-        });
+            node.send(msg);
+	}, 250);
     }
     RED.nodes.registerType("lirc-ir in", LircIrInNode);
 }
