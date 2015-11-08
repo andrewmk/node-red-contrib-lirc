@@ -6,8 +6,8 @@ module.exports = function(RED) {
         this.keyMap = config.keymap || {};
         var node = this;
         this.on('close', function() {
-            if (ir !== undefined && ir.stop !== undefined) {
-                ir.stop();
+            if (ir !== undefined && listenerId !== undefined) {
+                ir.removeListener(listenerId);
             }
         });
         ir.init();
@@ -19,7 +19,7 @@ module.exports = function(RED) {
             }
             return mappedKey;
         }
-	ir.addListener(function(data) {
+	var listenerId = ir.addListener(function(data) {
             var mappedKey = mappKey(data.key);
             var myPayload = {code: data.code, repeat: data.repeat, key: mappedKey, remote: data.remote};
             var msg = {payload: myPayload};
