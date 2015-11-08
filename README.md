@@ -1,5 +1,5 @@
-# node-red-contrib-ir
-Node-red component for banana-pi ir receiver.
+# node-red-contrib-lirc
+Node-red component for lirc IR receiver daemon.
 
 ##Functions
 * Key mapping
@@ -7,4 +7,4 @@ Node-red component for banana-pi ir receiver.
 * Key down/up output
 
 ##Outputs
-Component has two outputs, first is used on key down, seccond on key up.
+Component has two outputs, first is used on key down, second on key up.
