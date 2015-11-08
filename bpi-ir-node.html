@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('banana-ir in',{
+    RED.nodes.registerType('lirc-ir in',{
         category: "input",
         icon: "feed.png",
         color: "#FFAAAA",
@@ -10,7 +10,7 @@
             keymap: {value: {}, required: true }
         }, 
         label: function() {
-            return this.name || "IrReceiver"
+            return this.name || "LircIrReceiver"
         },
         oneditprepare: function() {
             var $container = $("#node-input-keymap-container");
@@ -64,7 +64,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="banana-ir in">
+<script type="text/x-red" data-template-name="lirc-ir in">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -83,9 +83,9 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="banana-ir in">
-   <p>Node to use ir receiver in banana pi</p>
+<script type="text/x-red" data-help-name="lirc-ir in">
+   <p>Node to use lirc IR receiver daemon</p>
    <p>Outputs an object called <b>msg</b> containing
    <b>msg.payload</b>. msg.payload is a key code or mapped value if exists in configuration.</p>
-   <p>First output send key down message, seccond key up.</p>
+   <p>First output send key down message, sccond key up.</p>
 </script>
