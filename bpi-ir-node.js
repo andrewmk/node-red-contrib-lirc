@@ -1,6 +1,6 @@
 module.exports = function(RED) {
-    var IR = require('bpi-ir');
-    function BpiIrOutNode(config) {
+    var IR = require('lirc_node');
+    function LircIrInNode(config) {
         var ir = new IR();
         RED.nodes.createNode(this,config);
         this.debug = config.debug || false;
@@ -37,5 +37,5 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("banana-ir in", BpiIrOutNode);
+    RED.nodes.registerType("lirc-ir in", LircIrInNode);
 }
